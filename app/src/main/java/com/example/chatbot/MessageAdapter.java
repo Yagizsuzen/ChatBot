@@ -8,16 +8,19 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class MessageAdapter extends RecyclerView.Adapter <RecyclerView.ViewHolder>{
+public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     List<Message> messageList;
+
+    public MessageAdapter(List<Message> messageList) {
+        this.messageList = messageList;
+    }
 
     static class UserViewHolder extends RecyclerView.ViewHolder {
         TextView messageText;
 
-        public UserViewHolder(android.view.View itemView) {
+        public UserViewHolder(@NonNull View itemView) {
             super(itemView);
             messageText = itemView.findViewById(R.id.userMessageText);
         }
@@ -26,49 +29,37 @@ public class MessageAdapter extends RecyclerView.Adapter <RecyclerView.ViewHolde
     static class BotViewHolder extends RecyclerView.ViewHolder {
         TextView messageText;
 
-        public BotViewHolder(android.view.View itemView) {
+        public BotViewHolder(@NonNull View itemView) {
             super(itemView);
             messageText = itemView.findViewById(R.id.botMessageText);
+        }
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (messageList.get(position).isUser()) {
+            return 0; // User message
+        } else {
+            return 1; // Bot message
         }
     }
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        if (viewType == 0){
+        if (viewType == 0) {
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.item_user_message, parent, false);
             return new UserViewHolder(view);
-        }
-        else{
+        } else {
             View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.item_bot_message,parent,false);
+                    .inflate(R.layout.item_bot_message, parent, false);
             return new BotViewHolder(view);
         }
     }
 
-
-    public MessageAdapter(List<Message> messageList){
-        this.messageList = messageList;
-    }
-
     @Override
-    public int getItemViewType(int position) {
-        if (messageList.get(position).getIsUser()){
-            return 0;
-        }
-        else{
-            return 1;
-        }
-    }
-
-    @Override
-    public int getItemCount() {
-        return messageList.size();
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position){
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         Message message = messageList.get(position);
         if (holder instanceof UserViewHolder) {
             ((UserViewHolder) holder).messageText.setText(message.getContent());
@@ -77,4 +68,8 @@ public class MessageAdapter extends RecyclerView.Adapter <RecyclerView.ViewHolde
         }
     }
 
+    @Override
+    public int getItemCount() {
+        return messageList.size();
+    }
 }
