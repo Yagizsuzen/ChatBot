@@ -1,36 +1,31 @@
 package com.example.chatbot;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import com.example.chatbot.Message;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
 import android.preference.PreferenceManager;
 import android.widget.Button;
-import android.widget.EditText;
-
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
 
-    SharedPreferences sharedPreferences;
-    Gson gson = new Gson();
-    String SHARED_PREF_KEY = "chat_data";
+    private SharedPreferences sharedPreferences;
+    private Gson gson;
+    private List<ChatSession> chatList;
+    private ChatSessionAdapter adapter;
 
-    List<Message> messageList = new ArrayList<>();
-    MessageAdapter adapter;
+    private RecyclerView recyclerView;
+    private Button newChatButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,45 +33,86 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
-        EditText inputMessage = findViewById(R.id.send_text);
-        Button sendButton = findViewById(R.id.send_button);
-        RecyclerView recyclerView = findViewById(R.id.Recyclerview);
-
+        gson = new Gson();
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String json = sharedPreferences.getString(SHARED_PREF_KEY, null);
 
-        if (json != null) {
-            Type type = new TypeToken<ArrayList<Message>>() {}.getType();
-            List<Message> savedMessages = gson.fromJson(json, type);
-            messageList = new ArrayList<>(savedMessages);
-        } else {
-            messageList = new ArrayList<>();
-        }
+        recyclerView = findViewById(R.id.chat_list_recyclerview);
+        newChatButton = findViewById(R.id.new_chat_button);
 
-        adapter = new MessageAdapter(messageList);
+        loadChats();
+
+        adapter = new ChatSessionAdapter(chatList, this::openChat, this::deleteChat);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
 
-        sendButton.setOnClickListener(v -> {
-            String userText = inputMessage.getText().toString().trim();
-            if (!userText.isEmpty()){
-                messageList.add(new Message(userText,true));
-                messageList.add(new Message("My name is johnny BRAVO...", false));
-
-                adapter.notifyDataSetChanged();
-
-                String jsonSave = gson.toJson(messageList);
-                sharedPreferences.edit().putString(SHARED_PREF_KEY, jsonSave).apply();
-
-                inputMessage.setText("");
-                recyclerView.scrollToPosition(messageList.size() - 1);
-            }
-        });
-
-
-
+        newChatButton.setOnClickListener(v -> startNewChat());
     }
 
+    private void startNewChat() {
+        String id = UUID.randomUUID().toString();
+        ChatSession newChat = new ChatSession(id, "New Chat", new ArrayList<>());
 
+        chatList.add(newChat);
 
+        Intent intent = new Intent(this, ChatActivity.class);
+        intent.putExtra("chat_id", id);
+        intent.putExtra("is_new_chat", true);
+        startActivityForResult(intent, 123);
+    }
+
+    private void openChat(ChatSession chatSession) {
+        Intent intent = new Intent(this, ChatActivity.class);
+        intent.putExtra("chat_id", chatSession.getId());
+        intent.putExtra("is_new_chat", false);
+        startActivityForResult(intent, 123);
+    }
+
+    private void deleteChat(ChatSession chatSession) {
+        chatList.remove(chatSession);
+        saveChats();
+        adapter.notifyDataSetChanged();
+    }
+
+    private void loadChats() {
+        String json = sharedPreferences.getString("chats", null);
+        if (json != null) {
+            Type type = new TypeToken<ArrayList<ChatSession>>() {}.getType();
+            chatList = gson.fromJson(json, type);
+        } else {
+            chatList = new ArrayList<>();
+        }
+    }
+
+    private void saveChats() {
+        String json = gson.toJson(chatList);
+        sharedPreferences.edit().putString("chats", json).apply();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 123) {
+            if (resultCode == RESULT_OK && data != null) {
+                String updatedChatJson = data.getStringExtra("updated_chat");
+                if (updatedChatJson != null) {
+                    ChatSession updatedChat = gson.fromJson(updatedChatJson, ChatSession.class);
+                    for (int i = 0; i < chatList.size(); i++) {
+                        if (chatList.get(i).getId().equals(updatedChat.getId())) {
+                            chatList.set(i, updatedChat);
+                            break;
+                        }
+                    }
+                    saveChats();
+                    adapter.notifyDataSetChanged();
+                }
+            } else if (resultCode == RESULT_CANCELED) {
+                if (!chatList.isEmpty() && chatList.get(chatList.size() - 1).getMessages().isEmpty()) {
+                    chatList.remove(chatList.size() - 1);
+                    saveChats();
+                    adapter.notifyDataSetChanged();
+                }
+            }
+        }
+    }
 }
