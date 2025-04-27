@@ -1,10 +1,10 @@
 package com.example.chatbot;
 
 public class Message {
-    String content;
-    boolean isUser;
+    private String content;
+    private boolean isUser;
 
-    Message(String content, boolean isUser){
+    public Message(String content, boolean isUser) {
         this.content = content;
         this.isUser = isUser;
     }
@@ -13,7 +13,7 @@ public class Message {
         return content;
     }
 
-    public boolean getIsUser(){
+    public boolean isUser() {
         return isUser;
     }
 }
