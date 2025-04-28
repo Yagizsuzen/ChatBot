@@ -10,6 +10,7 @@
         android:id="@+id/new_chat_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:backgroundTint="@color/material_dynamic_primary60"
         android:text="New Chat" />
 
     <androidx.recyclerview.widget.RecyclerView

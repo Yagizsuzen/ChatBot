@@ -26,6 +26,8 @@ public class ChatActivity extends AppCompatActivity {
 
     private static final String BASE_URL = "https://api.openai.com/";
     private SharedPreferences sharedPreferences;
+
+    private int chatCount = 1;
     private Gson gson;
     private List<ChatSession> chatList;
     private ChatSession currentChat;
@@ -51,6 +53,10 @@ public class ChatActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.Recyclerview);
 
         loadChats();
+        chatCount = chatList.size();
+
+
+
 
         String chatId = getIntent().getStringExtra("chat_id");
         isNewChat = getIntent().getBooleanExtra("is_new_chat", false);
@@ -64,7 +70,7 @@ public class ChatActivity extends AppCompatActivity {
 
         if (currentChat == null) {
             if (isNewChat) {
-                currentChat = new ChatSession(chatId, "New Chat", new ArrayList<>());
+                currentChat = new ChatSession(chatId, generateChatTitle(), new ArrayList<>());
             } else {
                 finish();
                 return;
@@ -204,9 +210,15 @@ public class ChatActivity extends AppCompatActivity {
         super.finish();
     }
 
+    private String generateChatTitle() {
+        chatCount++;
+        return "Chat " + chatCount;
+    }
+
     @Override
     public boolean onSupportNavigateUp() {
         finish();
         return true;
     }
 }
+

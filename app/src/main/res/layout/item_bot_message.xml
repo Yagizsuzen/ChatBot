@@ -9,9 +9,9 @@
         android:id="@+id/botMessageText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@android:color/darker_gray"
-        android:textColor="#000000"
-        android:textSize="16sp"
+        android:background="@drawable/bot_messagebackground"
+        android:maxWidth="250dp"
         android:padding="12dp"
-        android:maxWidth="250dp" />
+        android:textColor="#F6F2F2"
+        android:textSize="16sp" />
 </LinearLayout>

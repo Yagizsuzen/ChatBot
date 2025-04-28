@@ -8,12 +8,14 @@
     android:orientation="vertical"
     android:padding="8dp"
     tools:context=".ChatActivity">
+
     <Button
         android:id="@+id/back_to_list_button"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Back to Chats"
-        android:layout_marginBottom="8dp" />
+        android:layout_marginBottom="8dp"
+        android:backgroundTint="@color/material_dynamic_primary60"
+        android:text="Back to Chats" />
 
     <!-- RecyclerView: Will show chat messages -->
     <androidx.recyclerview.widget.RecyclerView
@@ -35,18 +37,19 @@
 
         <EditText
             android:id="@+id/send_text"
-            android:layout_width="0dp"
+            android:layout_width="292dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@android:drawable/edit_text"
             android:hint="Type a message..."
             android:padding="10dp"
-            android:background="@android:drawable/edit_text"
             android:textSize="16sp" />
 
         <Button
             android:id="@+id/send_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:backgroundTint="@color/material_dynamic_primary60"
             android:text="Send" />
     </LinearLayout>
 
