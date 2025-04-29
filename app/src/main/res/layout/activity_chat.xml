@@ -42,7 +42,7 @@
             android:layout_width="292dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@android:drawable/edit_text"
+            android:background="@drawable/edit_text"
             android:hint="Type a message..."
             android:padding="10dp"
             android:textSize="16sp" />
