@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <color name="background">#121212</color>
+    <color name="chatBubbleBot">#222222</color>
+    <color name="chatBubbleUser">#333333</color>
+    <color name="chatTextColor">#FFFFFF</color>
+    <color name="chatTextColorUser">#000000</color>
+    <color name="chatTextColorText">#000000</color>
+    <color name="buttonTint">#1E88E5</color>
+    <color name="chatBubbleBotBg">#222222</color>
+    <color name="chatBubbleUserBg">#333333</color>
+
+
+</resources>

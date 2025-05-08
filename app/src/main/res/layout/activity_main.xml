@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -8,7 +9,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
+        android:background="@color/buttonTint"
         android:elevation="4dp">
 
         <LinearLayout
@@ -22,7 +23,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Chat Sessions"
-                android:textColor="@android:color/white"
+                android:textColor="@color/chatTextColor"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
@@ -30,10 +31,10 @@
                 android:id="@+id/settings_button"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
+                android:background="@color/buttonTint"
                 android:contentDescription="Settings"
                 android:src="@android:drawable/ic_menu_manage"
-                android:tint="@android:color/white" />
+                app:tint="@color/chatTextColor" />
 
         </LinearLayout>
 
@@ -44,6 +45,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+
         android:padding="8dp" />
 
     <Button
@@ -51,6 +53,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:text="New Chat" />
+        android:text="New Chat"
+        android:backgroundTint="@color/buttonTint"
+        />
 
 </LinearLayout>

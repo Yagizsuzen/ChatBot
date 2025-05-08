@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="8dp"
-    android:background="#5A7DBF"
+    android:background="@color/background"
     tools:context=".ChatActivity">
 
     <Button
@@ -15,7 +15,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:backgroundTint="@color/material_dynamic_primary60"
+        android:backgroundTint="@color/buttonTint"
         android:text="Back to Chats" />
 
 
@@ -45,13 +45,14 @@
             android:background="@drawable/edit_text"
             android:hint="Type a message..."
             android:padding="10dp"
+            android:textColor="@color/chatTextColorText"
             android:textSize="16sp" />
 
         <Button
             android:id="@+id/send_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/material_dynamic_primary60"
+            android:backgroundTint="@color/buttonTint"
             android:text="Send" />
     </LinearLayout>
 

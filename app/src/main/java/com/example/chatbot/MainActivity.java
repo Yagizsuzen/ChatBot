@@ -10,6 +10,7 @@ import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -42,6 +43,12 @@ public class MainActivity extends AppCompatActivity {
         gson = new Gson();
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         prefsUtil = new SharedPreferencesUtil(this);
+
+        if (prefsUtil.isDarkModeEnabled()) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
 
         recyclerView = findViewById(R.id.chat_list_recyclerview);
         newChatButton = findViewById(R.id.new_chat_button);

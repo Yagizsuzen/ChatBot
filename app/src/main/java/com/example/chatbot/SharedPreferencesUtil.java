@@ -33,6 +33,16 @@ public class SharedPreferencesUtil {
         return isFirst;
     }
 
+    public void setDarkModeEnabled(boolean enabled){
+        preferences.edit().putBoolean("dark_mode",enabled).apply();
+    }
+
+    public boolean isDarkModeEnabled(){
+        return preferences.getBoolean("dark_mode",false);
+    }
+
+
+
     public static void saveChats(Context context, List<ChatSession> chatList) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         Gson gson = new Gson();

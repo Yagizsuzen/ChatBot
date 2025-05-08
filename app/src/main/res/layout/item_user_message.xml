@@ -12,6 +12,6 @@
         android:background="@drawable/user_messagebackground"
         android:maxWidth="250dp"
         android:padding="12dp"
-        android:textColor="#000000"
+        android:textColor="@color/chatTextColorUser"
         android:textSize="16sp" />
 </LinearLayout>
