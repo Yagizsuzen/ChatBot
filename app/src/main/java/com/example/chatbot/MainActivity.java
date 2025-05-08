@@ -5,11 +5,15 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.widget.Button;
+import android.widget.ImageButton;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.widget.EditText;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
@@ -20,12 +24,14 @@ import java.util.UUID;
 public class MainActivity extends AppCompatActivity {
 
     private SharedPreferences sharedPreferences;
+    private SharedPreferencesUtil prefsUtil;
     private Gson gson;
     private List<ChatSession> chatList;
     private ChatSessionAdapter adapter;
 
     private RecyclerView recyclerView;
     private Button newChatButton;
+    private ImageButton settingsButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,9 +41,11 @@ public class MainActivity extends AppCompatActivity {
 
         gson = new Gson();
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        prefsUtil = new SharedPreferencesUtil(this);
 
         recyclerView = findViewById(R.id.chat_list_recyclerview);
         newChatButton = findViewById(R.id.new_chat_button);
+        settingsButton = findViewById(R.id.settings_button);
 
         loadChats();
 
@@ -46,6 +54,37 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
         newChatButton.setOnClickListener(v -> startNewChat());
+        settingsButton.setOnClickListener(v -> openSettings());
+
+        // Check if it's first launch
+        if (prefsUtil.isFirstLaunch()) {
+            showNamePrompt();
+        }
+    }
+
+    private void showNamePrompt() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        builder.setTitle("Welcome!");
+        builder.setMessage("Please enter your name to get started");
+
+        final EditText input = new EditText(this);
+        input.setHint("Your name");
+        builder.setView(input);
+
+        builder.setPositiveButton("OK", (dialog, which) -> {
+            String name = input.getText().toString().trim();
+            if (!name.isEmpty()) {
+                prefsUtil.saveUserName(name);
+            }
+        });
+        builder.setCancelable(false);
+        builder.show();
+    }
+
+    private void openSettings() {
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
     }
 
     private void startNewChat() {

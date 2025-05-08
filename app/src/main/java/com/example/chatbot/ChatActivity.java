@@ -26,6 +26,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private static final String BASE_URL = "https://api.openai.com/";
     private SharedPreferences sharedPreferences;
+    private SharedPreferencesUtil prefsUtil;
 
     private int chatCount = 1;
     private Gson gson;
@@ -46,6 +47,7 @@ public class ChatActivity extends AppCompatActivity {
 
         gson = new Gson();
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        prefsUtil = new SharedPreferencesUtil(this);
 
         inputMessage = findViewById(R.id.send_text);
         Button sendButton = findViewById(R.id.send_button);
@@ -54,9 +56,6 @@ public class ChatActivity extends AppCompatActivity {
 
         loadChats();
         chatCount = chatList.size();
-
-
-
 
         String chatId = getIntent().getStringExtra("chat_id");
         isNewChat = getIntent().getBooleanExtra("is_new_chat", false);
@@ -115,7 +114,12 @@ public class ChatActivity extends AppCompatActivity {
 
     private void sendBotReply(String userText) {
         List<ChatRequest.MessageData> messages = new ArrayList<>();
-        messages.add(new ChatRequest.MessageData("system", "You are a helpful assistant."));
+        String userName = prefsUtil.getUserName();
+        String systemMessage = "You are a helpful assistant. ";
+        if (userName != null && !userName.isEmpty()) {
+            systemMessage += "The user's name is " + userName + ". Please refer to them by their name when appropriate.";
+        }
+        messages.add(new ChatRequest.MessageData("system", systemMessage));
 
         for (Message message : currentChat.getMessages()) {
             if (message.isUser()) {
